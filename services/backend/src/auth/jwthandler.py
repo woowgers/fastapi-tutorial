@@ -1,6 +1,6 @@
 import os
-import string
 import random
+import string
 from datetime import datetime, timedelta
 
 from fastapi import Depends, HTTPException, Request
@@ -10,6 +10,7 @@ from fastapi.security.utils import get_authorization_scheme_param
 from jose import JWTError, jwt
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
+
 from src.database.config import get_db
 from src.database.models import User
 from src.schemas.token import Token

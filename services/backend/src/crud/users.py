@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from passlib.context import CryptContext
 from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlalchemy.orm import Session
+
 from src.database.models import User
 from src.schemas.token import Status
 from src.schemas.users import UserCreate
@@ -9,15 +10,19 @@ from src.schemas.users import UserCreate
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def read_all_users(db: Session) -> list[User]:
+def read_all(db: Session) -> list[User]:
     return db.query(User).all()
 
 
-def read_user(id: int, db: Session) -> User:
-    return db.query(User).where(User.id == id).one()
+def read(id: int, db: Session) -> User:
+    try:
+        user = db.query(User).where(User.id == id).one()
+    except NoResultFound:
+        raise HTTPException(status_code=404, detail="User not found.")
+    return user
 
 
-def create_user(schema: UserCreate, db: Session) -> User:
+def create(schema: UserCreate, db: Session) -> User:
     schema.password = pwd_context.encrypt(schema.password)
     try:
         user = User(**schema.model_dump())
@@ -28,16 +33,10 @@ def create_user(schema: UserCreate, db: Session) -> User:
     return user
 
 
-def delete_user(id: int, current_user: User, db: Session) -> Status:
-    try:
-        user = db.query(User).where(User.id == id).one()
-    except NoResultFound:
-        raise HTTPException(status_code=404, detail="User not found.")
-
+def delete(id: int, current_user: User, db: Session) -> Status:
+    user = read(id, db)
     if user.id != current_user.id:
-        raise HTTPException(
-            status_code=403, detail="Not authorized to delete this user."
-        )
+        raise HTTPException(status_code=403, detail="Not authorized to delete this user.")
 
     deleted_count = db.query(User).filter(User.id == id).delete()
     if not deleted_count:
@@ -45,3 +44,12 @@ def delete_user(id: int, current_user: User, db: Session) -> Status:
 
     db.commit()
     return Status(message="User has been deleted.")
+
+
+def make_friends(id1: int, id2: int, db: Session) -> list[User]:
+    user1 = read(id1, db)
+    user2 = read(id2, db)
+    user1.friends.append(user2)
+    user2.friends.append(user1)
+    db.commit()
+    return user1.friends

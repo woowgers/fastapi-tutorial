@@ -1,11 +1,12 @@
 from datetime import timedelta
 
-import src.crud.users as crud
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+
+import src.crud.users as crud
 from src.auth.jwthandler import (ACCESS_TOKEN_EXPIRE_MINUTES,
                                  create_access_token, get_current_user)
 from src.auth.users import validate_user
@@ -20,7 +21,7 @@ router = APIRouter()
 
 @router.post("/register", response_model=UserSchema)
 def create(user: UserCreate, db: Session = Depends(get_db)) -> User:
-    return crud.create_user(user, db)
+    return crud.create(user, db)
 
 
 @router.post("/login")
@@ -34,10 +35,7 @@ def login(user_form: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
         )
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.username},
-        expires_delta=access_token_expires,
-    )
+    access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
     token = jsonable_encoder(access_token)
     content = {"message": "You have successfully logged in."}
     response = JSONResponse(content=content)
@@ -55,29 +53,24 @@ def login(user_form: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
 @router.get("/users", response_model=list[UserSchema])
 def read_all_users(db: Session = Depends(get_db)):
-    return crud.read_all_users(db)
+    return crud.read_all(db)
 
 
-@router.get(
-    "/users/whoami", response_model=UserSchema, dependencies=[Depends(get_current_user)]
-)
+@router.get("/users/me", response_model=UserSchema)
 def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 
 @router.get("/users/{user_id}", response_model=UserSchema)
 def read_user(user_id: int, db: Session = Depends(get_db)):
-    return crud.read_user(user_id, db)
+    return crud.read(user_id, db)
 
 
-@router.delete(
-    "/user/{user_id}",
-    response_model=Status,
-    dependencies=[Depends(get_current_user)],
-)
-def delete_user(
-    id: int,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    return crud.delete_user(id, current_user, db)
+@router.delete("/user/{user_id}", response_model=Status)
+def delete_user(id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return crud.delete(id, current_user, db)
+
+
+@router.post("/user/{user_id}/make_friend", response_model=list[UserSchema])
+def make_friend(user_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return crud.make_friends(current_user.id, user_id, db)

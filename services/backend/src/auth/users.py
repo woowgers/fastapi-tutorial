@@ -3,6 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
+
 from src.database.models import User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -22,10 +23,7 @@ def get_user(username: str, db: Session) -> User:
 
 def validate_user(db: Session, user_form: OAuth2PasswordRequestForm = Depends()):
     def make_unauthorized_error():
-        return HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid credentials.",
-        )
+        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials.")
 
     try:
         user = get_user(user_form.username, db)
