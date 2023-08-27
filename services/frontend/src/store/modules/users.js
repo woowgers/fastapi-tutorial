@@ -22,7 +22,7 @@ const actions = {
     await dispatch("viewMe");
   },
   async viewMe({ commit }) {
-    let { data } = await axios.get("users/whoami");
+    let { data } = await axios.get("users/me");
     await commit("setUser", data);
   },
   // eslint-disable-next-line no-empty-pattern
