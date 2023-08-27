@@ -23,9 +23,11 @@ const actions = {
     let { data } = await axios.get(`note/${id}`);
     commit("setNote", data);
   },
+  // eslint-disable-next-line no-empty-pattern
   async updateNote({}, note) {
     await axios.patch(`note/${note.id}`, note.form);
   },
+  // eslint-disable-next-line no-empty-pattern
   async deleteNote({}, id) {
     await axios.delete(`note/${id}`);
   },
