@@ -1,12 +1,14 @@
 import axios from "axios";
 
 const state = {
+  users: null,
   user: null,
 };
 
 const getters = {
   isAuthenticated: (state) => !!state.user,
   stateUser: (state) => state.user,
+  stateUsers: (state) => state.users,
 };
 
 const actions = {
@@ -22,12 +24,20 @@ const actions = {
     await dispatch("viewMe");
   },
   async viewMe({ commit }) {
-    let { data } = await axios.get("users/me");
+    let { data } = await axios.get(`users/me`);
+    await commit("setUser", data);
+  },
+  async viewUsers({ commit }) {
+    let { data } = await axios.get(`users`);
+    await commit("setUsers", data);
+  },
+  async viewUser({ commit }, id) {
+    let { data } = await axios.get(`users/${id}`);
     await commit("setUser", data);
   },
   // eslint-disable-next-line no-empty-pattern
   async deleteUser({}, id) {
-    await axios.delete(`user/${id}`);
+    await axios.delete(`users/${id}`);
   },
   async logOut({ commit }) {
     let user = null;
@@ -38,6 +48,9 @@ const actions = {
 const mutations = {
   setUser(state, username) {
     state.user = username;
+  },
+  setUsers(state, users) {
+    state.users = users;
   },
   logout(state, user) {
     state.user = user;

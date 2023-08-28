@@ -1,7 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import RegisterView from "@/views/RegisterView.vue";
-import LoginView from "@/views/LoginView.vue"
+import LoginView from "@/views/LoginView.vue";
+import DashboardView from "@/views/DashboardView.vue";
+import ProfileView from "@/views/ProfileView.vue";
+import UserView from "@/views/UserView.vue";
 
 const routes = [
   {
@@ -15,9 +18,24 @@ const routes = [
     component: RegisterView,
   },
   {
-    path: '/login',
-    name: 'Login',
+    path: "/login",
+    name: "Login",
     component: LoginView,
+  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: DashboardView,
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: ProfileView,
+  },
+  {
+    path: "/users/:id",
+    name: "User",
+    component: UserView,
   },
 ];
 

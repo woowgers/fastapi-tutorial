@@ -33,6 +33,7 @@ class User(Base):
         secondary=Friendship,
         primaryjoin=Friendship.c.left_id == id,
         secondaryjoin=Friendship.c.right_id == id,
+        cascade='delete',
     )
 
     def __str__(self):

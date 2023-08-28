@@ -66,11 +66,11 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return crud.read(user_id, db)
 
 
-@router.delete("/user/{user_id}", response_model=Status)
+@router.delete("/users/{user_id}", response_model=Status)
 def delete_user(id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     return crud.delete(id, current_user, db)
 
 
-@router.post("/user/{user_id}/make_friend", response_model=list[UserSchema])
+@router.post("/users/{user_id}/make_friend", response_model=list[UserSchema])
 def make_friend(user_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     return crud.make_friends(current_user.id, user_id, db)
