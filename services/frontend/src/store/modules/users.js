@@ -3,12 +3,14 @@ import axios from "axios";
 const state = {
   users: null,
   user: null,
+  me: null,
 };
 
 const getters = {
-  isAuthenticated: (state) => !!state.user,
+  isAuthenticated: (state) => !!state.me,
   stateUser: (state) => state.user,
   stateUsers: (state) => state.users,
+  stateMe: (state) => state.me,
 };
 
 const actions = {
@@ -25,35 +27,47 @@ const actions = {
   },
   async viewMe({ commit }) {
     let { data } = await axios.get(`users/me`);
-    await commit("setUser", data);
+    await commit("setMe", data);
   },
   async viewUsers({ commit }) {
     let { data } = await axios.get(`users`);
+    await commit("setUsers", data);
+  },
+  async viewFriends({ commit }) {
+    let user = await axios.get(`users/me`);
+    let { data } = await axios.get(`users/${user.data.id}/friends`);
     await commit("setUsers", data);
   },
   async viewUser({ commit }, id) {
     let { data } = await axios.get(`users/${id}`);
     await commit("setUser", data);
   },
+  async addFriend(_, me_id, id) {
+    let Form = new FormData();
+    Form.append("user_id", id);
+    await axios.post(`users/${me_id}/make_friend`, Form);
+  },
   // eslint-disable-next-line no-empty-pattern
   async deleteUser({}, id) {
     await axios.delete(`users/${id}`);
   },
   async logOut({ commit }) {
-    let user = null;
-    commit("logout", user);
+    commit("logout");
   },
 };
 
 const mutations = {
-  setUser(state, username) {
-    state.user = username;
+  setMe(state, me) {
+    state.me = me;
+  },
+  setUser(state, user) {
+    state.user = user;
   },
   setUsers(state, users) {
     state.users = users;
   },
-  logout(state, user) {
-    state.user = user;
+  logout(state) {
+    state.me = null;
   },
 };
 

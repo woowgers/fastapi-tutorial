@@ -14,6 +14,11 @@ def read_all(db: Session) -> list[User]:
     return db.query(User).all()
 
 
+def read_friends(id: int, db: Session) -> list[User]:
+    user = read(id, db)
+    return user.friends
+
+
 def read(id: int, db: Session) -> User:
     try:
         user = db.query(User).where(User.id == id).one()

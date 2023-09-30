@@ -6,10 +6,13 @@
           <router-link to="/">Home</router-link>
         </li>
         <li>
-          <router-link to="/dashboard">Dashboard</router-link>
+          <router-link to="/users">Users</router-link>
         </li>
         <li>
           <router-link to="/profile">My Profile</router-link>
+        </li>
+        <li>
+          <router-link :to="{name: 'Friends', params:{id: me.id}}">Friends</router-link>
         </li>
         <li>
           <a @click="logout">Log Out</a>
@@ -32,10 +35,12 @@
 
 <script>
 import { defineComponent } from 'vue';
+import { mapGetters } from 'vuex';
 
 export default defineComponent({
   name: 'NavBar',
   computed: {
+    ...mapGetters({ me: 'stateMe' }),
     isLoggedIn: function() {
       return this.$store.getters.isAuthenticated;
     },

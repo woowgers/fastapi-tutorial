@@ -18,9 +18,9 @@ import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex';
 
 export default defineComponent({
-  name: 'DashboardView',
+  name: 'UsersView',
   created: function() {
-    return this.$store.dispatch('viewUsers');
+    return this.$store.dispatch('viewFriends');
   },
   computed: {
     ...mapGetters({ users: 'stateUsers' })

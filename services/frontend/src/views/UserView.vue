@@ -1,6 +1,10 @@
 <template>
-  <p><strong>Nickname:</strong> {{ user.username }}</p>
-  <p><strong>Full name:</strong> {{ user.full_name }}</p>
+  <div>
+    <p><strong>ID:</strong> {{ user.id }} </p>
+    <p><strong>Username:</strong> {{ user.username }} </p>
+    <p><strong>Full name:</strong> {{ user.full_name }} </p>
+    <p><button @click="AddFriend()">Add friend</button></p>
+  </div>
 </template>
 
 
@@ -16,14 +20,21 @@ export default defineComponent({
       await this.viewUser(this.id);
     } catch (error) {
       console.error(error);
-      this.$router.push('/dashboard');
+      this.$router.push('/users');
     }
   },
   computed: {
-    ...mapGetters({ user: 'stateUser' }),
+    ...mapGetters({ user: 'stateUser', me: 'stateMe' }),
   },
   methods: {
-    ...mapActions(['viewUser']),
+    ...mapActions(['viewUser', 'addFriend']),
+    async AddFriend() {
+      try {
+        await this.addFriend(this.user.id);
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 });
 </script>

@@ -3,15 +3,15 @@
     <form @submit.prevent="submit">
       <div>
         <label for="username">Username:</label>
-        <input type="text" name="username" v-model="user.username" />
+        <input type="text" name="username" v-model="me.username" />
       </div>
       <div>
         <label for="full_name">Full Name:</label>
-        <input type="text" name="full_name" v-model="user.full_name" />
+        <input type="text" name="full_name" v-model="me.full_name" />
       </div>
       <div>
         <label for="password">Password:</label>
-        <input type="password" name="password" v-model="user.password" />
+        <input type="password" name="password" v-model="me.password" />
       </div>
       <button type="submit">Submit</button>
     </form>
@@ -26,7 +26,7 @@ export default defineComponent({
   name: 'RegisterView',
   data() {
     return {
-      user: {
+      me: {
         username: '',
         full_name: '',
         password: '',
@@ -37,7 +37,7 @@ export default defineComponent({
     ...mapActions(['register']),
     async submit() {
       try {
-        await this.register(this.user);
+        await this.register(this.me);
       } catch (error) {
         throw 'Username already exists. Please, try again.';
       }

@@ -66,6 +66,11 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return crud.read(user_id, db)
 
 
+@router.get("/users/{user_id}/friends", response_model=list[UserSchema])
+def read_friends(user_id: int, db: Session = Depends(get_db)):
+    return crud.read_friends(user_id, db)
+
+
 @router.delete("/users/{user_id}", response_model=Status)
 def delete_user(id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     return crud.delete(id, current_user, db)

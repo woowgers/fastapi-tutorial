@@ -3,9 +3,9 @@
     <h1>Your Profile</h1>
     <hr/><br/>
     <div>
-      <p><strong>ID:</strong> {{ user.id }}</p>
-      <p><strong>Full Name:</strong> {{ user.full_name }}</p>
-      <p><strong>Username:</strong> {{ user.username }}</p>
+      <p><strong>ID:</strong> {{ me.id }}</p>
+      <p><strong>Full Name:</strong> {{ me.full_name }}</p>
+      <p><strong>Username:</strong> {{ me.username }}</p>
       <p><button @click="deleteAccount()">Delete Account</button></p>
     </div>
   </section>
@@ -21,13 +21,13 @@ export default defineComponent({
     return this.$store.dispatch('viewMe');
   },
   computed: {
-    ...mapGetters({ user: 'stateUser' })
+    ...mapGetters({ me: 'stateMe' })
   },
   methods: {
     ...mapActions(['deleteUser']),
     async deleteAccount() {
       try {
-        await this.deleteUser(this.user.id);
+        await this.deleteUser(this.me.id);
         await this.$store.dispatch('logOut');
         this.$router.push('/');
       } catch (error) {

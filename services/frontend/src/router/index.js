@@ -2,9 +2,10 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import LoginView from "@/views/LoginView.vue";
-import DashboardView from "@/views/DashboardView.vue";
+import UsersView from "@/views/UsersView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import UserView from "@/views/UserView.vue";
+import FriendsView from "@/views/FriendsView.vue";
 
 const routes = [
   {
@@ -23,9 +24,9 @@ const routes = [
     component: LoginView,
   },
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    component: DashboardView,
+    path: "/users",
+    name: "Users",
+    component: UsersView,
   },
   {
     path: "/profile",
@@ -36,6 +37,13 @@ const routes = [
     path: "/users/:id",
     name: "User",
     component: UserView,
+    props: true,
+  },
+  {
+    path: "/users/:id/friends",
+    name: "Friends",
+    component: FriendsView,
+    props: true,
   },
 ];
 

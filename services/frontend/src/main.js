@@ -12,4 +12,4 @@ app.use(store);
 app.mount("#app");
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:5000/";
+axios.defaults.baseURL = "http://192.168.0.98:5000/";
